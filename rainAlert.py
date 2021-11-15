@@ -1,5 +1,6 @@
 import requests
 import config
+from twilio.rest import Client
 
 base_url = "https://api.openweathermap.org/data/2.5/onecall"
 params = {
@@ -20,4 +21,14 @@ for hour_data in next_twelve_hours:
         rain = True
 
 if rain:
-    print("Bring an Umbrella")
+    account_sid = config.account_sid
+    auth_token = config.auth_token
+    client = Client(account_sid, auth_token)
+
+    message = client.messages.create(
+        body="It is going to rain, remember to bring an umbrella :)",
+        from_=config.send_from,
+        to=config.send_to
+    )
+
+    print(message.status)
